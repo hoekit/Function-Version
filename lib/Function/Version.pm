@@ -1,4 +1,5 @@
 package Function::Version;
+# Define and use different function versions
 use strict; use warnings; use utf8; use 5.10.0;
 our $VERSION = '0.0001';
 use Carp;
@@ -30,29 +31,44 @@ sub _init {
 }
 sub ver {
     my ($self,$ver) = @_;
+
+    # Guard: Caller should be an object
+    croak "Error. You have not selected a function."
+        unless ref $self eq 'Function::Version';
+
+    my ($fname) = ($self->{fname});
+
+    # Guard: The selected version of the function must be defined
+    croak "Error. Version '$ver' of '$fname' not in definition."
+        unless exists $self->{dispatch}{$fname}{$ver};
+
     $self->{ver} = $ver;
     return $self;
 }
 sub func {
     my ($self,$fname) = @_;
 
-    if ($self eq 'FuncVer') {
-        $self = FuncVer->new;       # Convert the class into an object
+    if ($self eq 'Function::Version') {
+        $self = Function::Version->new;       # Convert the class into an object
     } else {
-        croak "Error: Assigned to '".$self->{fname}."' already";
+        croak "Error: Assigned to '".$self->{fname}."' already.";
     }
+
+    # Guard: Selected function must be defined
+    croak "Error. Selected function '$fname' not in definition."
+        unless exists $self->{dispatch}{$fname};
 
     $self->{fname} = $fname;
     return $self;
 }
 sub with {
     my ($self,@args) = @_;
-    my ($fname,$ver) = ($self->{fname},$self->{ver});
 
-    croak "Error. Function not defined: $fname"
-        unless exists $self->{dispatch}{$fname};
-    croak "Error. Version of '$fname' not defined: $ver"
-        unless exists $self->{dispatch}{$fname}{$ver};
+    # Guard: Caller should be an object
+    croak "Error. You have not selected a function."
+        unless ref $self eq 'Function::Version';
+
+    my ($fname,$ver) = ($self->{fname},$self->{ver});
 
     $self->{dispatch}{$fname}{$ver}(@args);
 }
