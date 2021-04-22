@@ -1,7 +1,6 @@
 # t/funcver.t v0.0.1-1
 use strict; use warnings; use utf8; use 5.10.0;
 use Test::More;
-use Try::Tiny;
 
 use lib qw(lib ../lib);
 use Function::Version;
