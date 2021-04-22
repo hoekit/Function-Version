@@ -1,7 +1,7 @@
 package Function::Version;
 # Define and use different function versions
 use strict; use warnings; use utf8; use 5.10.0;
-our $VERSION = '0.0001';
+our $VERSION = '0.0002';
 use Carp;
 
 # 2D Dispatch table
